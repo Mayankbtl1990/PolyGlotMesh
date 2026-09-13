@@ -1,6 +1,20 @@
+import { useState } from "react";
+
+import CodeWorkspace from "./components/CodeWorkspace";
 import ConsolePanel from "./components/ConsolePanel";
+import { INITIAL_SCRIPTS } from "./lib/languages";
 
 export default function App() {
+  const [language, setLanguage] = useState("python");
+  const [scripts, setScripts] = useState(() => ({ ...INITIAL_SCRIPTS }));
+
+  function updateCode(code) {
+    setScripts((current) => ({
+      ...current,
+      [language]: code,
+    }));
+  }
+
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -11,10 +25,12 @@ export default function App() {
       </header>
 
       <div className="workspace">
-        <section className="panel">
-          <h2>Code Editor</h2>
-          <p>The Monaco editor will be added on Day 2.</p>
-        </section>
+        <CodeWorkspace
+          language={language}
+          code={scripts[language]}
+          onLanguageChange={setLanguage}
+          onCodeChange={updateCode}
+        />
 
         <ConsolePanel />
       </div>
