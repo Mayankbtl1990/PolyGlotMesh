@@ -56,11 +56,13 @@ public class GuestRuntime {
         );
     }
 
-    private String resolveLanguage(String language) {
-        if ("python".equals(language)) {
-            return "python";
-        }
-
-        throw new IllegalArgumentException("Unsupported language: " + language);
+        private String resolveLanguage(String language) {
+            return switch (language) {
+                case "python" -> "python";
+                case "javascript" -> "js";
+                default -> throw new IllegalArgumentException(
+                "Unsupported language: " + language
+            );
+        };
     }
 }
