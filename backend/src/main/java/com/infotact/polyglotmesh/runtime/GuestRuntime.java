@@ -1,7 +1,7 @@
 package com.infotact.polyglotmesh.runtime;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
+// import java.io.ByteArrayOutputStream;
+// import java.nio.charset.StandardCharsets;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
@@ -22,8 +22,8 @@ public class GuestRuntime {
     public ExecutionResult execute(String language, String code) {
         String languageId = resolveLanguage(language);
 
-        ByteArrayOutputStream stdout = new ByteArrayOutputStream();
-        ByteArrayOutputStream stderr = new ByteArrayOutputStream();
+        LimitedOutputStream stdout = new LimitedOutputStream(64 * 1024);
+        LimitedOutputStream stderr = new LimitedOutputStream(64 * 1024);
 
         long startedAt = System.nanoTime();
 
@@ -48,11 +48,11 @@ public class GuestRuntime {
         double durationMs = (System.nanoTime() - startedAt) / 1_000_000.0;
 
         return new ExecutionResult(
-                language,
-                stdout.toString(StandardCharsets.UTF_8),
-                stderr.toString(StandardCharsets.UTF_8),
-                durationMs,
-                false
+         language,
+            stdout.text(),
+            stderr.text(),
+            durationMs,
+            stdout.truncated() || stderr.truncated()
         );
     }
 
