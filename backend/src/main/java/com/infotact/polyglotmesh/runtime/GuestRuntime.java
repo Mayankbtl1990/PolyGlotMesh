@@ -5,9 +5,9 @@ package com.infotact.polyglotmesh.runtime;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
-import org.graalvm.polyglot.EnvironmentAccess;
-import org.graalvm.polyglot.HostAccess;
-import org.graalvm.polyglot.io.IOAccess;
+// import org.graalvm.polyglot.EnvironmentAccess;
+// import org.graalvm.polyglot.HostAccess;
+// import org.graalvm.polyglot.io.IOAccess;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,21 +27,12 @@ public class GuestRuntime {
 
         long startedAt = System.nanoTime();
 
-        try (Context context = Context.newBuilder(languageId)
-                .engine(engine)
-                .allowAllAccess(false)
-                .allowHostAccess(HostAccess.NONE)
-                .allowHostClassLookup(name -> false)
-                .allowIO(IOAccess.NONE)
-                .allowNativeAccess(false)
-                .allowCreateThread(false)
-                .allowCreateProcess(false)
-                .allowEnvironmentAccess(EnvironmentAccess.NONE)
-                .in(java.io.InputStream.nullInputStream())
-                .out(stdout)
-                .err(stderr)
-                .build()) {
-
+        try (Context context = new RestrictedContextFactory().create(
+            engine,
+            languageId,
+            stdout,
+            stderr
+        )) {
             context.eval(languageId, code);
         }
 
