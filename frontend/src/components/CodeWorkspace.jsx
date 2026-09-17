@@ -1,4 +1,5 @@
 import Editor from "@monaco-editor/react";
+import EditorStatusBar from "./EditorStatusBar";
 import { LANGUAGES } from "../lib/languages";
 
 export default function CodeWorkspace({
@@ -49,8 +50,16 @@ export default function CodeWorkspace({
           automaticLayout: true,
           scrollBeyondLastLine: false,
           tabSize: 4,
+          ariaLabel: `${selected.label} code editor`,
+          wordWrap: "on",
         }}
+        loading={
+          <p className="editor-loading" role="status">
+            Loading code editor…
+          </p>
+        }
       />
+      <EditorStatusBar language={selected.label} code={code} />
     </section>
   );
 }
