@@ -62,4 +62,59 @@ describe("API client", () => {
       }),
     );
   });
+
+  it("preserves backend script error messages", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn().mockResolvedValue({
+      ok: false,
+      status: 422,
+      json: async () => ({
+        code: "SCRIPT_ERROR",
+        message: "ZeroDivisionError: division by zero",
+      }),
+    }),
+  );
+
+  await expect(
+    executeCode({
+      language: "python",
+      code: "print(1 / 0)",
+    }),
+  ).rejects.toMatchObject({
+    status: 422,
+    code: "SCRIPT_ERROR",
+    message: "ZeroDivisionError: division by zero",
+  });
+});
+
+it("explains network connection failures", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn().mockRejectedValue(new TypeError("Failed to fetch")),
+  );
+
+  await expect(getHealth()).rejects.toMatchObject({
+    code: "NETWORK_ERROR",
+    status: 0,
+  });
+});
+
+it("handles non-JSON server responses", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn().mockResolvedValue({
+      ok: false,
+      status: 502,
+      json: async () => {
+        throw new SyntaxError("Unexpected token");
+      },
+    }),
+  );
+
+  await expect(getHealth()).rejects.toMatchObject({
+    code: "INVALID_RESPONSE",
+    status: 502,
+  });
+});
 });
