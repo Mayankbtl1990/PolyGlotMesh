@@ -10,3 +10,7 @@ spring:
     name: polyglotmesh
   codec:
     max-in-memory-size: 128KB
+
+polyglotmesh:
+  execution:
+    timeout-ms: 5000
