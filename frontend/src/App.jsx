@@ -4,6 +4,8 @@ import CodeWorkspace from "./components/CodeWorkspace";
 import ExecutionConsole from "./components/ExecutionConsole";
 import { useExecution } from "./hooks/useExecution";
 import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
+import ResizableWorkspace from "./components/ResizableWorkspace";
+import BackendStatus from "./components/BackendStatus";
 
 export default function App() {
   const [language, setLanguage] = useState("python");
@@ -38,8 +40,7 @@ export default function App() {
           <h1>PolyglotMesh</h1>
           <p>One workspace. Multiple languages.</p>
         </div>
-
-        <span className="muted">Week 1 · Local prototype</span>
+        <BackendStatus />
       </header>
 
       <div className="toolbar">
@@ -72,7 +73,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className="workspace">
+      <ResizableWorkspace>
         <CodeWorkspace
           language={language}
           code={scripts[language]}
@@ -82,7 +83,7 @@ export default function App() {
         />
 
         <ExecutionConsole execution={execution} />
-      </div>
+      </ResizableWorkspace>
     </main>
   );
 }
