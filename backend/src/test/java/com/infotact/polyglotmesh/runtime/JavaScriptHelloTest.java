@@ -1,6 +1,6 @@
 package com.infotact.polyglotmesh.runtime;
 
-import org.graalvm.polyglot.Engine;
+// import org.graalvm.polyglot.Engine;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,8 +9,8 @@ class JavaScriptHelloTest {
 
     @Test
     void executesJavaScriptAndCapturesConsoleOutput() {
-        try (Engine engine = Engine.create()) {
-            GuestRuntime runtime = new GuestRuntime(engine);
+        try (RuntimeFixture fixture = new RuntimeFixture()) {
+            GuestRuntime runtime = fixture.runtime(30_000);
 
             ExecutionResult result = runtime.execute(
                     "javascript",
