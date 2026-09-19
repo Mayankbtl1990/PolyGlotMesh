@@ -1,7 +1,7 @@
 package com.infotact.polyglotmesh.runtime;
 
-import org.graalvm.polyglot.Engine;
-import org.graalvm.polyglot.PolyglotException;
+// import org.graalvm.polyglot.Engine;
+// import org.graalvm.polyglot.PolyglotException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,19 +13,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GuestRuntimeTest {
 
-    private Engine engine;
+    private RuntimeFixture fixture;
     private GuestRuntime runtime;
 
     @BeforeAll
-    void setUp() {
-        engine = Engine.create();
-        runtime = new GuestRuntime(engine);
-    }
+        void setUp() {
+            fixture = new RuntimeFixture();
+            runtime = fixture.runtime(30_000);
+        }
 
-    @AfterAll
-    void tearDown() {
-        engine.close();
-    }
+     @AfterAll
+        void tearDown() {
+            fixture.close();
+        }
 
     @Test
     void calculatesPythonPricingExample() {
@@ -69,7 +69,7 @@ class GuestRuntimeTest {
     void reportsGuestScriptFailures() {
         assertThatThrownBy(
                 () -> runtime.execute("python", "print(1 / 0)")
-        ).isInstanceOf(PolyglotException.class);
+        ).isInstanceOf(ScriptExecutionException.class);
     }
 
     @Test
