@@ -2,6 +2,7 @@ package com.infotact.polyglotmesh.runtime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,7 +45,23 @@ public class GuestRuntime {
     }
 
     public ExecutionResult execute(String language, String code) {
-        String languageId = resolveLanguage(language);
+        return evaluate(language, code, null);
+    }
+
+    public ExecutionResult executeWithPricing(
+        String language,
+        String code,
+        Map<String, Object> pricing
+    ) {
+        return evaluate(language, code, new PricingBindings(pricing));
+    }
+
+    private ExecutionResult evaluate(
+        String language,
+        String code,
+        PricingBindings pricing
+    ) {
+    String languageId = resolveLanguage(language);
 
         LimitedOutputStream stdout = new LimitedOutputStream(64 * 1024);
         LimitedOutputStream stderr = new LimitedOutputStream(64 * 1024);
@@ -65,6 +82,9 @@ public class GuestRuntime {
                 stdout,
                 stderr
         )) {
+            if (pricing != null) {
+                context.getBindings(languageId).putMember("pricing", pricing);
+            }
             var deadline = deadlineExecutor.schedule(() -> {
                 if (phase.compareAndSet(RUNNING, TIMED_OUT)) {
                     try {

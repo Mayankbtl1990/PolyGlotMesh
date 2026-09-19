@@ -1,7 +1,7 @@
 package com.infotact.polyglotmesh.runtime;
 
-// import org.graalvm.polyglot.Engine;
-// import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.PolyglotException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
