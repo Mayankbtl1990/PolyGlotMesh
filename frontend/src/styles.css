@@ -15,7 +15,6 @@ body {
   min-width: 320px;
 }
 
-/* Typography Elements */
 h1,
 h2,
 h3 {
@@ -45,7 +44,6 @@ p {
   font-size: 0.875rem;
 }
 
-/* Layout & Containers */
 .app-shell {
   max-width: 1600px;
   margin: auto;
@@ -156,7 +154,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* Status & Console Displays */
 .console-output,
 .console-error {
   white-space: pre-wrap;
@@ -189,7 +186,6 @@ button:focus-visible {
   font-size: 0.8rem;
 }
 
-/* Responsive Overrides */
 @media (max-width: 900px) {
   .workspace {
     grid-template-columns: 1fr;
@@ -206,4 +202,13 @@ button:focus-visible {
   .app-shell {
     padding: 12px;
   }
+}
+
+.guest-stack {
+  margin: 12px 0;
+}
+
+.guest-stack summary {
+  cursor: pointer;
+  color: #7dd3fc;
 }

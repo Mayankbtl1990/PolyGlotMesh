@@ -44,9 +44,8 @@ export default function App() {
 
       <div className="toolbar">
         <p className="muted">
-          Trusted scripts only. Execution cancellation is not enabled yet.
+          Local development only. Evaluation deadlines are best-effort; hard memory isolation is not enabled.        
         </p>
-
         <div className="tabs">
           <button
             type="button"

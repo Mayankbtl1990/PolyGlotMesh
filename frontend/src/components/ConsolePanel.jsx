@@ -2,6 +2,8 @@ export default function ConsolePanel({
   stdout = "",
   stderr = "",
   error = "",
+  errorCode="",
+  guestStack=[],
   running = false,
   durationMs = null,
   outputTruncated = false,
@@ -24,6 +26,25 @@ export default function ConsolePanel({
       {error && (
         <pre className="console-error" role="alert">
           {error}
+          {errorCode && (
+            <p className="muted">
+                Error code: <code>{errorCode}</code>
+            </p>
+          )}
+
+          {errorCode === "EXECUTION_TIMEOUT" && (
+            <p className="warning">
+              The evaluation deadline was reached. Simplify the script before retrying.
+              This is not a hard CPU or memory quota.
+            </p>
+          )}
+
+          {guestStack.length > 0 && (
+            <details className="guest-stack">
+              <summary>Guest stack trace</summary>
+              <pre className="console-error">{guestStack.join("\n")}</pre>
+            </details>
+          )}
         </pre>
       )}
 
