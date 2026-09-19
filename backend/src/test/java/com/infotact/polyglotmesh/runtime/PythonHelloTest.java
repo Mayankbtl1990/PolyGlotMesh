@@ -9,8 +9,8 @@ class PythonHelloTest {
 
     @Test
     void executesHelloFromPython() {
-        try (Engine engine = Engine.create()) {
-            GuestRuntime runtime = new GuestRuntime(engine);
+        try (RuntimeFixture fixture = new RuntimeFixture()) {
+            GuestRuntime runtime = fixture.runtime(30_000);
 
             ExecutionResult result = runtime.execute(
                     "python",

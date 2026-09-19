@@ -3,6 +3,7 @@ package com.infotact.polyglotmesh.api;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
+import com.infotact.polyglotmesh.runtime.ScriptExecutionException;
 import org.graalvm.polyglot.PolyglotException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,19 @@ public class ApiExceptionHandler {
                 "RUNTIME_BUSY",
                 "Execution capacity is busy. Try again later."
         );
+    }
+
+    @ExceptionHandler(ScriptExecutionException.class)
+    public ResponseEntity<ApiError> handleScriptExecution(
+            ScriptExecutionException exception
+    ) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(new ApiError(
+                        exception.code(),
+                        exception.getMessage(),
+                        exception.execution(),
+                        exception.guestStack()
+                ));
     }
 
     @ExceptionHandler(Exception.class)

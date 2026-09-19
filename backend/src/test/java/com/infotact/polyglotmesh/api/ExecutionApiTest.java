@@ -10,7 +10,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "polyglotmesh.execution.timeout-ms=30000"
 )
 class ExecutionApiTest {
 
@@ -118,5 +119,25 @@ class ExecutionApiTest {
                 .expectStatus().isEqualTo(422)
                 .expectBody()
                 .jsonPath("$.code").isEqualTo("SCRIPT_ERROR");
+    }
+
+    @Test
+    void preservesOutputBeforeGuestFailure() {
+        client.post()
+                .uri("/api/executions")
+                .bodyValue(Map.of(
+                        "language", "javascript",
+                        "code", """
+                                console.log("before failure");
+                                throw new Error("expected failure");
+                                """
+                ))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody()
+                .jsonPath("$.code").isEqualTo("SCRIPT_ERROR")
+                .jsonPath("$.execution.stdout")
+                    .isEqualTo("before failure\n")
+                .jsonPath("$.guestStack").isArray();
     }
 }
