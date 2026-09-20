@@ -1,7 +1,7 @@
 import ConsolePanel from "./ConsolePanel";
 
 export default function ExecutionConsole({ execution }) {
-  const { result, error, running } = execution;
+  const { result, error, errorCode, guestStack, running } = execution;
 
   return (
     <ConsolePanel
@@ -10,6 +10,8 @@ export default function ExecutionConsole({ execution }) {
       durationMs={result?.durationMs ?? null}
       outputTruncated={result?.outputTruncated ?? false}
       error={error}
+      errorCode={errorCode}
+      guestStack={guestStack}
       running={running}
     />
   );

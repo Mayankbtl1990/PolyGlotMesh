@@ -204,21 +204,11 @@ button:focus-visible {
   }
 }
 
-.backend-status {
-  border: 1px solid #475569;
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.8rem;
+.guest-stack {
+  margin: 12px 0;
 }
 
-.backend-status.online {
-  color: #86efac;
-}
-
-.backend-status.offline {
-  color: #fca5a5;
-}
-
-.backend-status.checking {
-  color: #fcd34d;
+.guest-stack summary {
+  cursor: pointer;
+  color: #7dd3fc;
 }

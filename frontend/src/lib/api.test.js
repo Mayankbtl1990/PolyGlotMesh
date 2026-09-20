@@ -117,4 +117,39 @@ it("handles non-JSON server responses", async () => {
     status: 502,
   });
 });
+
+it("preserves partial output and guest stack on failure", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn().mockResolvedValue({
+      ok: false,
+      status: 422,
+      json: async () => ({
+        code: "SCRIPT_ERROR",
+        message: "Expected failure",
+        execution: {
+          stdout: "before failure\n",
+          stderr: "",
+          durationMs: 8,
+          outputTruncated: false,
+        },
+        guestStack: ["main (script.js:2)"],
+      }),
+    }),
+  );
+
+  await expect(
+    executeCode({
+      language: "javascript",
+      code: "throw new Error('Expected failure')",
+    }),
+  ).rejects.toMatchObject({
+    code: "SCRIPT_ERROR",
+    execution: {
+      stdout: "before failure\n",
+    },
+    guestStack: ["main (script.js:2)"],
+  });
+});
+
 });
