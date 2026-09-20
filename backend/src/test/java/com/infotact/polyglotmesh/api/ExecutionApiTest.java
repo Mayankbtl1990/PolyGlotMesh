@@ -140,4 +140,18 @@ class ExecutionApiTest {
                     .isEqualTo("before failure\n")
                 .jsonPath("$.guestStack").isArray();
     }
+
+    @Test
+    void exposesRuntimeLimitations() {
+        client.get()
+                .uri("/api/runtime/capabilities")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.evaluationTimeoutMs").isEqualTo(30000)
+                .jsonPath("$.hardMemoryLimit").isEqualTo(false)
+                .jsonPath("$.hardCpuQuota").isEqualTo(false)
+                .jsonPath("$.authenticated").isEqualTo(false)
+                .jsonPath("$.capturedBytesPerStream").isEqualTo(65536);
+    }
 }
