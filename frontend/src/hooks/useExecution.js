@@ -7,37 +7,52 @@ export function useExecution() {
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [errorCode, setErrorCode] = useState("");
+  const [guestStack, setGuestStack] = useState([]);
+
+  function resetOutput() {
+    setResult(null);
+    setError("");
+    setErrorCode("");
+    setGuestStack([]);
+  }
 
   async function run(language, code) {
     if (requestInFlight.current) {
       return;
     }
 
+    resetOutput();
+
     if (!["python", "javascript"].includes(language)) {
-      setError("Java execution is not supported in Week 1.");
+      setError("Java execution is not supported.");
+      setErrorCode("UNSUPPORTED_LANGUAGE");
       return;
     }
 
     if (!code.trim()) {
       setError("Enter some code before running.");
+      setErrorCode("EMPTY_CODE");
       return;
     }
 
     if (code.length > 20_000) {
       setError("Code must not exceed 20,000 characters.");
+      setErrorCode("CODE_TOO_LARGE");
       return;
     }
 
     requestInFlight.current = true;
     setRunning(true);
-    setError("");
-    setResult(null);
 
     try {
       const response = await executeCode({ language, code });
       setResult(response);
     } catch (failure) {
       setError(failure.message || "Execution failed.");
+      setErrorCode(failure.code || "REQUEST_FAILED");
+      setResult(failure.execution ?? null);
+      setGuestStack(failure.guestStack ?? []);
     } finally {
       requestInFlight.current = false;
       setRunning(false);
@@ -45,12 +60,9 @@ export function useExecution() {
   }
 
   function clear() {
-    if (requestInFlight.current) {
-      return;
+    if (!requestInFlight.current) {
+      resetOutput();
     }
-
-    setResult(null);
-    setError("");
   }
 
   return {
@@ -59,5 +71,7 @@ export function useExecution() {
     running,
     result,
     error,
+    errorCode,
+    guestStack,
   };
 }

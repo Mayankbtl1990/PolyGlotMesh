@@ -1,9 +1,11 @@
 export class ApiClientError extends Error {
-  constructor(message, status, code) {
+  constructor(message, status, code, execution = null, guestStack = []) {
     super(message);
     this.name = "ApiClientError";
     this.status = status;
     this.code = code;
+    this.execution = execution;
+    this.guestStack = guestStack;
   }
 }
 
@@ -39,12 +41,14 @@ async function request(path, options = {}) {
   }
 
   if (!response.ok) {
-    throw new ApiClientError(
-      body.message || `Request failed with status ${response.status}.`,
-      response.status,
-      body.code || "REQUEST_FAILED",
-    );
-  }
+  throw new ApiClientError(
+    body.message || `Request failed with status ${response.status}.`,
+    response.status,
+    body.code || "REQUEST_FAILED",
+    body.execution ?? null,
+    Array.isArray(body.guestStack) ? body.guestStack : [],
+  );
+}
 
   return body;
 }
