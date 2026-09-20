@@ -1,11 +1,14 @@
 import { useState } from "react";
 
+import BackendStatus from "./components/BackendStatus";
 import CodeWorkspace from "./components/CodeWorkspace";
 import ExecutionConsole from "./components/ExecutionConsole";
-import { useExecution } from "./hooks/useExecution";
-import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
+import PricingAuditPanel from "./components/PricingAuditPanel";
 import ResizableWorkspace from "./components/ResizableWorkspace";
-import BackendStatus from "./components/BackendStatus";
+
+import { useExecution } from "./hooks/useExecution";
+import { useRunShortcut } from "./hooks/useRunShortcut";
+import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
 
 export default function App() {
   const [language, setLanguage] = useState("python");
@@ -16,6 +19,12 @@ export default function App() {
   const selectedLanguage = LANGUAGES.find(
     (item) => item.id === language,
   );
+
+  const canRun =
+    !execution.running &&
+    selectedLanguage.executable &&
+    Boolean(scripts[language].trim()) &&
+    scripts[language].length <= 20_000;
 
   function updateCode(code) {
     setScripts((current) => ({
@@ -33,6 +42,8 @@ export default function App() {
     execution.run(language, scripts[language]);
   }
 
+  useRunShortcut(runCurrentScript, canRun);
+
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -40,13 +51,16 @@ export default function App() {
           <h1>PolyglotMesh</h1>
           <p>One workspace. Multiple languages.</p>
         </div>
+
         <BackendStatus />
       </header>
 
       <div className="toolbar">
         <p className="muted">
-          Local development only. Evaluation deadlines are best-effort; hard memory isolation is not enabled.        
+          Local development only. Deadlines are best-effort.
+          Hard memory isolation is not enabled.
         </p>
+
         <div className="tabs">
           <button
             type="button"
@@ -60,14 +74,13 @@ export default function App() {
           <button
             type="button"
             className="primary-button"
-            disabled={
-              execution.running ||
-              !selectedLanguage.executable ||
-              !scripts[language].trim()
-            }
+            disabled={!canRun}
             onClick={runCurrentScript}
+            title="Ctrl+Enter or Command+Enter"
           >
-            {execution.running ? "Running…" : `Run ${selectedLanguage.label}`}
+            {execution.running
+              ? "Running…"
+              : `Run ${selectedLanguage.label}`}
           </button>
         </div>
       </div>
@@ -83,6 +96,8 @@ export default function App() {
 
         <ExecutionConsole execution={execution} />
       </ResizableWorkspace>
+
+      <PricingAuditPanel />
     </main>
   );
 }
