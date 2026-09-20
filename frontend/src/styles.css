@@ -233,3 +233,17 @@ button:focus-visible {
   margin: 8px 0 0;
   font-size: 1.2rem;
 }
+
+/* Policy Panel Styles */
+.policy-panel {
+  margin-top: 20px;
+}
+
+.policy-panel > summary {
+  cursor: pointer;
+  color: #7dd3fc;
+}
+
+.policy-panel li {
+  margin-bottom: 8px;
+}
