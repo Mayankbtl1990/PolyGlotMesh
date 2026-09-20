@@ -5,6 +5,7 @@ import CodeWorkspace from "./components/CodeWorkspace";
 import ExecutionConsole from "./components/ExecutionConsole";
 import PricingAuditPanel from "./components/PricingAuditPanel";
 import ResizableWorkspace from "./components/ResizableWorkspace";
+import RuntimePolicyPanel from "./components/RuntimePolicyPanel";
 
 import { useExecution } from "./hooks/useExecution";
 import { useRunShortcut } from "./hooks/useRunShortcut";
@@ -98,6 +99,7 @@ export default function App() {
       </ResizableWorkspace>
 
       <PricingAuditPanel />
+      <RuntimePolicyPanel />
     </main>
   );
 }
