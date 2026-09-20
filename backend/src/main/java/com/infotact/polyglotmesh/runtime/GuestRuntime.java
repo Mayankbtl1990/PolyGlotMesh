@@ -45,15 +45,23 @@ public class GuestRuntime {
     }
 
     public ExecutionResult execute(String language, String code) {
-        return executeWithPricing(language, code, Map.of());
+        return evaluate(language, code, null);
     }
 
     public ExecutionResult executeWithPricing(
-            String language,
-            String code,
-            Map<String, Object> pricingMap
+        String language,
+        String code,
+        Map<String, Object> pricing
     ) {
-        String languageId = resolveLanguage(language);
+        return evaluate(language, code, new PricingBindings(pricing));
+    }
+
+    private ExecutionResult evaluate(
+        String language,
+        String code,
+        PricingBindings pricing
+    ) {
+    String languageId = resolveLanguage(language);
 
         LimitedOutputStream stdout = new LimitedOutputStream(64 * 1024);
         LimitedOutputStream stderr = new LimitedOutputStream(64 * 1024);
@@ -74,10 +82,9 @@ public class GuestRuntime {
                 stdout,
                 stderr
         )) {
-            if (pricingMap != null && !pricingMap.isEmpty()) {
-                context.getBindings(languageId).putMember("pricing", pricingMap);
+            if (pricing != null) {
+                context.getBindings(languageId).putMember("pricing", pricing);
             }
-
             var deadline = deadlineExecutor.schedule(() -> {
                 if (phase.compareAndSet(RUNNING, TIMED_OUT)) {
                     try {
