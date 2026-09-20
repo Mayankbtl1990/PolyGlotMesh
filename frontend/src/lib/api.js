@@ -41,14 +41,14 @@ async function request(path, options = {}) {
   }
 
   if (!response.ok) {
-  throw new ApiClientError(
-    body.message || `Request failed with status ${response.status}.`,
-    response.status,
-    body.code || "REQUEST_FAILED",
-    body.execution ?? null,
-    Array.isArray(body.guestStack) ? body.guestStack : [],
-  );
-}
+    throw new ApiClientError(
+      body.message || `Request failed with status ${response.status}.`,
+      response.status,
+      body.code || "REQUEST_FAILED",
+      body.execution ?? null,
+      Array.isArray(body.guestStack) ? body.guestStack : [],
+    );
+  }
 
   return body;
 }
@@ -64,5 +64,15 @@ export function executeCode({ language, code }) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ language, code }),
+  });
+}
+
+export function runPricingAudit() {
+  return request("/api/audits/pricing", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
   });
 }
