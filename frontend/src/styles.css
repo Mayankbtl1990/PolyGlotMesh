@@ -212,3 +212,24 @@ button:focus-visible {
   cursor: pointer;
   color: #7dd3fc;
 }
+
+/* Audit Panel Styles */
+.audit-panel {
+  margin-top: 20px;
+}
+
+.audit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.audit-grid dt {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.audit-grid dd {
+  margin: 8px 0 0;
+  font-size: 1.2rem;
+}
