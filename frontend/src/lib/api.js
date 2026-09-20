@@ -76,3 +76,7 @@ export function runPricingAudit() {
     body: JSON.stringify({}),
   });
 }
+
+export function getRuntimeCapabilities() {
+  return request("/api/runtime/capabilities");
+}
