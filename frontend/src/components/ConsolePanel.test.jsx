@@ -44,4 +44,28 @@ describe("ConsolePanel", () => {
       screen.getByText("<img src=x onerror=alert(1)>"),
     ).toBeTruthy();
   });
+
+  it("shows timeout guidance", () => {
+    render(
+      <ConsolePanel
+        error="Evaluation deadline reached"
+        errorCode="EXECUTION_TIMEOUT"
+      />,
+    );
+
+    expect(screen.getByText(/Simplify the script before retrying/)).toBeTruthy();
+  });
+
+  it("renders guest stack frames as text", () => {
+    const { container } = render(
+      <ConsolePanel
+        error="Example error"
+        guestStack={["<script>bad()</script> (script.py:1)"]}
+      />,
+    );
+
+    expect(screen.getByText("Guest stack trace")).toBeTruthy();
+    expect(container.querySelector("script")).toBeNull();
+  });
+  
 });
