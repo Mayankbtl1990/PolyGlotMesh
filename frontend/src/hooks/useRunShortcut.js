@@ -1,25 +1,55 @@
-import { useEffect } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  cleanup,
+  fireEvent,
+  renderHook,
+} from "@testing-library/react";
 
-export function useRunShortcut(callback, enabled) {
-  useEffect(() => {
-    function handleKeyDown(event) {
-      const modifierPressed = event.ctrlKey || event.metaKey;
+import { useRunShortcut } from "./useRunShortcut";
 
-      if (!modifierPressed || event.key !== "Enter" || event.repeat) {
-        return;
-      }
+afterEach(cleanup);
 
-      event.preventDefault();
+describe("useRunShortcut", () => {
+  it("runs on Ctrl+Enter when enabled", () => {
+    const run = vi.fn();
 
-      if (enabled) {
-        callback();
-      }
-    }
+    renderHook(() => useRunShortcut(run, true));
 
-    window.addEventListener("keydown", handleKeyDown, true);
+    fireEvent.keyDown(window, {
+      key: "Enter",
+      ctrlKey: true,
+    });
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [callback, enabled]);
-}
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not run when disabled", () => {
+    const run = vi.fn();
+
+    renderHook(() => useRunShortcut(run, false));
+
+    fireEvent.keyDown(window, {
+      key: "Enter",
+      metaKey: true,
+    });
+
+    expect(run).not.toHaveBeenCalled();
+  });
+
+  it("removes the listener when unmounted", () => {
+    const run = vi.fn();
+
+    const { unmount } = renderHook(() =>
+      useRunShortcut(run, true),
+    );
+
+    unmount();
+
+    fireEvent.keyDown(window, {
+      key: "Enter",
+      ctrlKey: true,
+    });
+
+    expect(run).not.toHaveBeenCalled();
+  });
+});
