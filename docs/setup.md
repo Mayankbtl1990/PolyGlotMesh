@@ -123,3 +123,21 @@ Stop and restart the backend JVM. Request cancellation is not implemented.
 
 Run npm ci, restart Vite, and inspect the browser console for worker errors.
 Monaco is bundled locally; the implementation does not require its default CDN.
+
+## Week 2 update
+
+For current cancellation, error handling, and interoperability behavior, see:
+
+- docs/api-week-2.md
+- docs/progress/week-2.md
+
+These supersede the Week 1 statements that cancellation and partial
+failure output are not implemented.
+
+Week 2 adds best-effort evaluation cancellation, not hard resource isolation.
+
+Before demonstrating controlled infinite-loop cancellation, run the automated
+cancellation tests under a process-level test watchdog.
+
+Persistence, arbitrary Java execution, hard guest memory limits, and public
+deployment support remain unimplemented.
