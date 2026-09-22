@@ -1,55 +1,77 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-  cleanup,
-  fireEvent,
-  renderHook,
-} from "@testing-library/react";
+import { useRef, useState } from "react";
+import { executeCode } from "../lib/api";
 
-import { useRunShortcut } from "./useRunShortcut";
+export function useExecution() {
+  const requestInFlight = useRef(false);
 
-afterEach(cleanup);
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
+  const [errorCode, setErrorCode] = useState("");
+  const [guestStack, setGuestStack] = useState([]);
 
-describe("useRunShortcut", () => {
-  it("runs on Ctrl+Enter when enabled", () => {
-    const run = vi.fn();
+  function resetOutput() {
+    setResult(null);
+    setError("");
+    setErrorCode("");
+    setGuestStack([]);
+  }
 
-    renderHook(() => useRunShortcut(run, true));
+  async function run(language, code) {
+    if (requestInFlight.current) {
+      return;
+    }
 
-    fireEvent.keyDown(window, {
-      key: "Enter",
-      ctrlKey: true,
-    });
+    resetOutput();
 
-    expect(run).toHaveBeenCalledTimes(1);
-  });
+    if (!["python", "javascript"].includes(language)) {
+      setError("Java execution is not supported.");
+      setErrorCode("UNSUPPORTED_LANGUAGE");
+      return;
+    }
 
-  it("does not run when disabled", () => {
-    const run = vi.fn();
+    if (!code.trim()) {
+      setError("Enter some code before running.");
+      setErrorCode("EMPTY_CODE");
+      return;
+    }
 
-    renderHook(() => useRunShortcut(run, false));
+    if (code.length > 20_000) {
+      setError("Code must not exceed 20,000 characters.");
+      setErrorCode("CODE_TOO_LARGE");
+      return;
+    }
 
-    fireEvent.keyDown(window, {
-      key: "Enter",
-      metaKey: true,
-    });
+    requestInFlight.current = true;
+    setRunning(true);
 
-    expect(run).not.toHaveBeenCalled();
-  });
+    try {
+      const response = await executeCode({ language, code });
+      setResult(response);
+    } catch (failure) {
+      setError(failure.message || "Execution failed.");
+      setErrorCode(failure.code || "REQUEST_FAILED");
+      setResult(failure.execution ?? null);
+      setGuestStack(failure.guestStack ?? []);
+    } finally {
+      requestInFlight.current = false;
+      setRunning(false);
+    }
+  }
 
-  it("removes the listener when unmounted", () => {
-    const run = vi.fn();
+  function clear() {
+    if (!requestInFlight.current) {
+      resetOutput();
+    }
+  }
 
-    const { unmount } = renderHook(() =>
-      useRunShortcut(run, true),
-    );
-
-    unmount();
-
-    fireEvent.keyDown(window, {
-      key: "Enter",
-      ctrlKey: true,
-    });
-
-    expect(run).not.toHaveBeenCalled();
-  });
-});
+  return {
+    run,
+    clear,
+    running,
+    result,
+    error,
+    errorCode,
+    guestStack,
+  };
+}
