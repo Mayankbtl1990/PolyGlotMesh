@@ -1,9 +1,11 @@
 export class ApiClientError extends Error {
-  constructor(message, status, code) {
+  constructor(message, status, code, execution = null, guestStack = []) {
     super(message);
     this.name = "ApiClientError";
     this.status = status;
     this.code = code;
+    this.execution = execution;
+    this.guestStack = guestStack;
   }
 }
 
@@ -43,6 +45,8 @@ async function request(path, options = {}) {
       body.message || `Request failed with status ${response.status}.`,
       response.status,
       body.code || "REQUEST_FAILED",
+      body.execution ?? null,
+      Array.isArray(body.guestStack) ? body.guestStack : [],
     );
   }
 
@@ -61,4 +65,18 @@ export function executeCode({ language, code }) {
     },
     body: JSON.stringify({ language, code }),
   });
+}
+
+export function runPricingAudit() {
+  return request("/api/audits/pricing", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+}
+
+export function getRuntimeCapabilities() {
+  return request("/api/runtime/capabilities");
 }

@@ -140,4 +140,53 @@ class ExecutionApiTest {
                     .isEqualTo("before failure\n")
                 .jsonPath("$.guestStack").isArray();
     }
+
+    @Test
+    void exposesRuntimeLimitations() {
+        client.get()
+                .uri("/api/runtime/capabilities")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.evaluationTimeoutMs").isEqualTo(30000)
+                .jsonPath("$.hardMemoryLimit").isEqualTo(false)
+                .jsonPath("$.hardCpuQuota").isEqualTo(false)
+                .jsonPath("$.authenticated").isEqualTo(false)
+                .jsonPath("$.capturedBytesPerStream").isEqualTo(65536);
+    }
+
+    @Test
+    void completesPricingAudit() {
+        client.post()
+                .uri("/api/audits/pricing")
+                .header("Content-Type", "application/json")
+                .bodyValue(Map.of())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.basePrice").isEqualTo(100.0)
+                .jsonPath("$.discount").isEqualTo(0.15)
+                .jsonPath("$.finalPrice").isEqualTo(85.0)
+                .jsonPath("$.backingMapUpdated").isEqualTo(true)
+                .jsonPath("$.execution.language").isEqualTo("python");
+    }
+
+    @Test
+    void remainsHealthyAfterGuestFailure() {
+        client.post()
+                .uri("/api/executions")
+                .bodyValue(Map.of(
+                        "language", "javascript",
+                        "code", "throw new Error('controlled failure');"
+                ))
+                .exchange()
+                .expectStatus().isEqualTo(422);
+
+        client.get()
+                .uri("/api/health")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.status").isEqualTo("UP");
+    }
 }
