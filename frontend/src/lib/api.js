@@ -80,3 +80,21 @@ export function runPricingAudit() {
 export function getRuntimeCapabilities() {
   return request("/api/runtime/capabilities");
 }
+
+export function getExecutionMetrics() {
+  return request("/api/metrics");
+}
+
+export function getRuntimeDiagnostics() {
+  return request("/api/runtime/diagnostics");
+}
+
+export function runMockRestBaseline() {
+  return request("/api/benchmarks/mock-rest", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+}
