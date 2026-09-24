@@ -8,7 +8,7 @@ import ResizableWorkspace from "./components/ResizableWorkspace";
 import RuntimePolicyPanel from "./components/RuntimePolicyPanel";
 
 import { useExecution } from "./hooks/useExecution";
-import { useRunShortcut } from "./hooks/useRunShortcut";
+import useRunShortcut from "./hooks/useRunShortcut"; // Fixed: Removed curly braces
 import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
 
 export default function App() {
