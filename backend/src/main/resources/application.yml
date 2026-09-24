@@ -13,4 +13,4 @@ spring:
 
 polyglotmesh:
   execution:
-    timeout-ms: 5000
+    timeout-ms: 15000
