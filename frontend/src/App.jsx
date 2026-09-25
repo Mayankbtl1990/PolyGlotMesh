@@ -9,7 +9,7 @@ import RuntimePolicyPanel from "./components/RuntimePolicyPanel";
 import MetricsDashboard from "./components/MetricsDashboard";
 
 import { useExecution } from "./hooks/useExecution";
-import useRunShortcut from "./hooks/useRunShortcut"; // Fixed: Removed curly braces
+import { useRunShortcut } from "./hooks/useRunShortcut"; // Fixed: Removed curly braces
 import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
 
 export default function App() {
