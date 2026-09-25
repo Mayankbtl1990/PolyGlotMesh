@@ -1,21 +1,25 @@
 import { useEffect } from "react";
 
-export function useRunShortcut(onRun, canRun = true) {
+export function useRunShortcut(callback, enabled) {
   useEffect(() => {
     function handleKeyDown(event) {
-      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
-        if (canRun) {
-          event.preventDefault();
-          onRun();
-        }
+      const modifierPressed = event.ctrlKey || event.metaKey;
+
+      if (!modifierPressed || event.key !== "Enter" || event.repeat) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (enabled) {
+        callback();
       }
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [onRun, canRun]);
-}
+    window.addEventListener("keydown", handleKeyDown, true);
 
-export default useRunShortcut;
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, [callback, enabled]);
+}
