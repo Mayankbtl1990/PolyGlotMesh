@@ -6,9 +6,10 @@ import ExecutionConsole from "./components/ExecutionConsole";
 import PricingAuditPanel from "./components/PricingAuditPanel";
 import ResizableWorkspace from "./components/ResizableWorkspace";
 import RuntimePolicyPanel from "./components/RuntimePolicyPanel";
+import MetricsDashboard from "./components/MetricsDashboard";
 
 import { useExecution } from "./hooks/useExecution";
-import useRunShortcut from "./hooks/useRunShortcut"; // Fixed: Removed curly braces
+import { useRunShortcut } from "./hooks/useRunShortcut"; // Fixed: Removed curly braces
 import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
 
 export default function App() {
@@ -97,7 +98,8 @@ export default function App() {
 
         <ExecutionConsole execution={execution} />
       </ResizableWorkspace>
-
+            
+      <MetricsDashboard />
       <PricingAuditPanel />
       <RuntimePolicyPanel />
     </main>

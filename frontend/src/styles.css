@@ -238,3 +238,43 @@ button:focus-visible {
   .app-shell {
     padding: 12px;
   }
+}
+
+.measurement-table-wrapper {
+  overflow-x: auto;
+}
+
+.measurement-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.measurement-table th,
+.measurement-table td {
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+  text-align: left;
+}
+
+.measurement-table td:last-child {
+  width: 50%;
+}
+
+.measurement-bar {
+  height: 5px;
+  margin-top: 7px;
+  border-radius: 4px;
+}
+
+.measurement-bar.guest {
+  background: #38bdf8;
+}
+
+.measurement-bar.mock {
+  background: #c084fc;
+}
+
+.metrics-panel section {
+  margin-top: 24px;
+}
