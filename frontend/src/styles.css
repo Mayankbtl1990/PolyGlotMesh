@@ -44,6 +44,7 @@ p {
   font-size: 0.875rem;
 }
 
+/* App Shell & Layout Structure */
 .app-shell {
   max-width: 1600px;
   margin: auto;
@@ -90,6 +91,30 @@ p {
   border: 1px solid #334155;
   border-radius: 12px;
   background: #111827;
+}
+
+/* Metrics & Cards */
+.metrics-panel {
+  margin-top: 20px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.metric-card {
+  padding: 16px;
+  background: #020617;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.metric-value {
+  margin: 12px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 /* Interactive & Input Controls */
@@ -154,6 +179,7 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+/* Terminal & Console Output */
 .console-output,
 .console-error {
   white-space: pre-wrap;
@@ -186,6 +212,16 @@ button:focus-visible {
   font-size: 0.8rem;
 }
 
+.guest-stack {
+  margin: 12px 0;
+}
+
+.guest-stack summary {
+  cursor: pointer;
+  color: #7dd3fc;
+}
+
+/* Responsive Breakpoints */
 @media (max-width: 900px) {
   .workspace {
     grid-template-columns: 1fr;
@@ -204,46 +240,41 @@ button:focus-visible {
   }
 }
 
-.guest-stack {
-  margin: 12px 0;
+.measurement-table-wrapper {
+  overflow-x: auto;
 }
 
-.guest-stack summary {
-  cursor: pointer;
-  color: #7dd3fc;
+.measurement-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
 }
 
-/* Audit Panel Styles */
-.audit-panel {
-  margin-top: 20px;
+.measurement-table th,
+.measurement-table td {
+  padding: 12px;
+  border-bottom: 1px solid #334155;
+  text-align: left;
 }
 
-.audit-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
+.measurement-table td:last-child {
+  width: 50%;
 }
 
-.audit-grid dt {
-  color: #94a3b8;
-  font-size: 0.85rem;
+.measurement-bar {
+  height: 5px;
+  margin-top: 7px;
+  border-radius: 4px;
 }
 
-.audit-grid dd {
-  margin: 8px 0 0;
-  font-size: 1.2rem;
+.measurement-bar.guest {
+  background: #38bdf8;
 }
 
-/* Policy Panel Styles */
-.policy-panel {
-  margin-top: 20px;
+.measurement-bar.mock {
+  background: #c084fc;
 }
 
-.policy-panel > summary {
-  cursor: pointer;
-  color: #7dd3fc;
-}
-
-.policy-panel li {
-  margin-bottom: 8px;
+.metrics-panel section {
+  margin-top: 24px;
 }
