@@ -7,9 +7,10 @@ import PricingAuditPanel from "./components/PricingAuditPanel";
 import ResizableWorkspace from "./components/ResizableWorkspace";
 import RuntimePolicyPanel from "./components/RuntimePolicyPanel";
 import MetricsDashboard from "./components/MetricsDashboard";
+import RuntimeDiagnosticsPanel from "./components/RuntimeDiagnosticsPanel";
 
 import { useExecution } from "./hooks/useExecution";
-import { useRunShortcut } from "./hooks/useRunShortcut"; // Fixed: Removed curly braces
+import { useRunShortcut } from "./hooks/useRunShortcut"; 
 import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
 
 export default function App() {
@@ -102,6 +103,7 @@ export default function App() {
       <MetricsDashboard />
       <PricingAuditPanel />
       <RuntimePolicyPanel />
+      <RuntimeDiagnosticsPanel />
     </main>
   );
 }
