@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import { useMetrics } from "../hooks/useMetrics";
 import { runMockRestBaseline } from "../lib/api";
 import MetricCards from "./MetricCards";
-import RecentMeasurements from "./RecentMeasurements";
 
 export default function MetricsDashboard() {
   const { metrics, error } = useMetrics();
@@ -70,12 +69,7 @@ export default function MetricsDashboard() {
         <p role="status">Loading metrics…</p>
       )}
 
-      {metrics && (
-        <>
-            <MetricCards metrics={metrics} />
-            <RecentMeasurements samples={metrics.recent} />
-        </>
-       )}
+      {metrics && <MetricCards metrics={metrics} />}
     </section>
   );
 }
