@@ -71,3 +71,29 @@ Do not hide build failures or label the JVM application as native.
 
 If embedded Python is unsupported with the selected combination, keep the
 JVM deployment and document the blocker.
+## Native smoke test
+
+If compilation succeeds, stop the JVM server and start the native executable:
+
+    ./backend/target/polyglotmesh-native
+
+Then, from another terminal at the repository root:
+
+    python3 scripts/native_smoke.py
+
+The script deliberately fails if the server reports JVM mode.
+
+A passing smoke test covers:
+- Health.
+- Native execution mode.
+- Python execution.
+- JavaScript execution.
+- Pricing map interoperability.
+
+It does not prove:
+- Native timeout cancellation.
+- Complete access isolation.
+- Hard CPU or memory limits.
+- Production readiness.
+
+Those require separate native-specific validation.
