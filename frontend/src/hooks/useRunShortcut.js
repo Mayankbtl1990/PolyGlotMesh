@@ -23,4 +23,3 @@ export function useRunShortcut(callback, enabled) {
     };
   }, [callback, enabled]);
 }
-}
