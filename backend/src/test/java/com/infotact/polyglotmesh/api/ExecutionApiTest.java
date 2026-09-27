@@ -189,4 +189,44 @@ class ExecutionApiTest {
                 .expectBody()
                 .jsonPath("$.status").isEqualTo("UP");
     }
+
+    @Test
+    void exposesExecutionMetrics() {
+        client.get()
+                .uri("/api/metrics")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.guestCount").isNumber()
+                .jsonPath("$.guestFailures").isNumber()
+                .jsonPath("$.guestMeanMs").isNumber()
+                .jsonPath("$.recent").isArray();
+    }
+
+    @Test
+    void exposesJvmRuntimeDiagnostics() {
+        client.get()
+                .uri("/api/runtime/diagnostics")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.executionMode").isEqualTo("JVM")
+                .jsonPath("$.installedLanguages").isArray()
+                .jsonPath("$.engineVersion").isNotEmpty();
+    }
+
+    @Test
+    void labelsMockBaselineAsSynthetic() {
+        client.post()
+                .uri("/api/benchmarks/mock-rest")
+                .header("Content-Type", "application/json")
+                .bodyValue(Map.of())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.kind").isEqualTo("SIMULATED_DELAY_ONLY")
+                .jsonPath("$.configuredDelayMs").isEqualTo(50)
+                .jsonPath("$.observedMs").isNumber()
+                .jsonPath("$.equivalentScriptExecuted").isEqualTo(false);
+    }
 }
