@@ -141,3 +141,22 @@ cancellation tests under a process-level test watchdog.
 
 Persistence, arbitrary Java execution, hard guest memory limits, and public
 deployment support remain unimplemented.
+
+## Week 3 update
+
+New endpoints:
+
+- GET /api/metrics
+- GET /api/runtime/diagnostics
+- POST /api/benchmarks/mock-rest
+
+The dashboard refreshes metrics approximately every three seconds.
+
+See:
+- docs/metrics.md
+- docs/native-image.md
+- docs/native-investigation-results.md
+- docs/progress/week-3.md
+
+Native Image support is experimental until validated on the chosen toolchain.
+The normal JVM startup command remains the supported development baseline.
