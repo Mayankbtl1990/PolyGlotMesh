@@ -71,3 +71,12 @@ Do not hide build failures or label the JVM application as native.
 
 If embedded Python is unsupported with the selected combination, keep the
 JVM deployment and document the blocker.
+## Evidence record
+
+Use docs/native-investigation-results.md to record actual build and runtime
+results.
+
+Do not alter NOT RUN entries merely to make the project appear complete.
+
+The JVM application remains the release/demo path until native functionality
+has been independently verified.
