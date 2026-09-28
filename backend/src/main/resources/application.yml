@@ -10,6 +10,18 @@ spring:
     name: polyglotmesh
   codec:
     max-in-memory-size: 128KB
+  datasource:
+    url: jdbc:h2:file:./data/polyglotmesh
+    username: sa
+    password: ""
+    hikari:
+      maximum-pool-size: 4
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: false
 
 polyglotmesh:
   execution:
