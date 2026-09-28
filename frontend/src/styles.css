@@ -1,3 +1,40 @@
+.library-panel,
+.data-panel {
+  margin-top: 20px;
+}
+
+.library-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.library-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 180px;
+}
+
+input,
+select {
+  font: inherit;
+  color: #e2e8f0;
+  background: #020617;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
 :root {
   font-family: Inter, system-ui, sans-serif;
   color: #e2e8f0;
