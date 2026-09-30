@@ -98,3 +98,31 @@ export function runMockRestBaseline() {
     body: JSON.stringify({}),
   });
 }
+
+export function listSavedScripts() {
+  return request("/api/scripts");
+}
+
+export function getSavedScript(id) {
+  return request(`/api/scripts/${encodeURIComponent(id)}`);
+}
+
+export function createSavedScript({ name, language, code }) {
+  return request("/api/scripts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, language, code }),
+  });
+}
+
+export function updateSavedScript(id, { name, language, code }) {
+  return request(`/api/scripts/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, language, code }),
+  });
+}

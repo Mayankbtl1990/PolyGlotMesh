@@ -3,7 +3,9 @@ package com.infotact.polyglotmesh.api;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
+import com.infotact.polyglotmesh.data.ProductNotFoundException;
 import com.infotact.polyglotmesh.runtime.ScriptExecutionException;
+import com.infotact.polyglotmesh.scripts.ScriptNotFoundException;
 import org.graalvm.polyglot.PolyglotException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,20 @@ public class ApiExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 "INVALID_REQUEST",
                 "Request body must be valid JSON with language and code fields."
+        );
+    }
+
+    @ExceptionHandler({
+            ScriptNotFoundException.class,
+            ProductNotFoundException.class
+    })
+    public ResponseEntity<ApiError> handleMissingResource(
+            RuntimeException exception
+    ) {
+        return response(
+                HttpStatus.NOT_FOUND,
+                "NOT_FOUND",
+                exception.getMessage()
         );
     }
 
