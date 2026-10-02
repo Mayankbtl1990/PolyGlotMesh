@@ -91,7 +91,7 @@ describe("CodeWorkspace", () => {
 
     expect(screen.getByText("Lines: 2")).toBeTruthy();
     expect(
-      screen.getByText("Storage: session memory only"),
+      screen.getByText("Draft: browser memory · Use the library to save"),
     ).toBeTruthy();
   });
 });

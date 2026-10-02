@@ -8,6 +8,7 @@ import ResizableWorkspace from "./components/ResizableWorkspace";
 import RuntimePolicyPanel from "./components/RuntimePolicyPanel";
 import MetricsDashboard from "./components/MetricsDashboard";
 import RuntimeDiagnosticsPanel from "./components/RuntimeDiagnosticsPanel";
+import ScriptLibraryPanel from "./components/ScriptLibraryPanel";
 
 import { useExecution } from "./hooks/useExecution";
 import { useRunShortcut } from "./hooks/useRunShortcut"; 
@@ -16,6 +17,7 @@ import { INITIAL_SCRIPTS, LANGUAGES } from "./lib/languages";
 export default function App() {
   const [language, setLanguage] = useState("python");
   const [scripts, setScripts] = useState(() => ({ ...INITIAL_SCRIPTS }));
+  const [libraryBusy, setLibraryBusy] = useState(false);
 
   const execution = useExecution();
 
@@ -25,6 +27,7 @@ export default function App() {
 
   const canRun =
     !execution.running &&
+    !libraryBusy &&
     selectedLanguage.executable &&
     Boolean(scripts[language].trim()) &&
     scripts[language].length <= 20_000;
@@ -34,6 +37,29 @@ export default function App() {
       ...current,
       [language]: code,
     }));
+  }
+
+  function loadSavedScript(script) {
+    const existingCode = scripts[script.language];
+
+    if (
+      existingCode !== script.code &&
+      !window.confirm(
+        `Replace the current ${script.language} tab? Unsaved changes in that tab will be lost.`,
+      )
+    ) {
+      return false;
+    }
+
+    setScripts((current) => ({
+      ...current,
+      [script.language]: script.code,
+    }));
+
+    setLanguage(script.language);
+    execution.clear();
+
+    return true;
   }
 
   function changeLanguage(nextLanguage) {
@@ -68,7 +94,7 @@ export default function App() {
           <button
             type="button"
             className="secondary-button"
-            disabled={execution.running}
+            disabled={execution.running || libraryBusy}
             onClick={execution.clear}
           >
             Clear console
@@ -94,12 +120,19 @@ export default function App() {
           code={scripts[language]}
           onLanguageChange={changeLanguage}
           onCodeChange={updateCode}
-          readOnly={execution.running}
+          readOnly={execution.running || libraryBusy}
         />
 
         <ExecutionConsole execution={execution} />
       </ResizableWorkspace>
 
+      <ScriptLibraryPanel
+        language={language}
+        code={scripts[language]}
+        disabled={execution.running}
+        onLoad={loadSavedScript}
+        onBusyChange={setLibraryBusy}
+      />
       <MetricsDashboard /> 
       <PricingAuditPanel />
       <RuntimePolicyPanel />
