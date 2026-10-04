@@ -50,6 +50,17 @@ public class ApiExceptionHandler {
         );
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(
+            IllegalArgumentException exception
+    ) {
+        return response(
+                HttpStatus.BAD_REQUEST,
+                "INVALID_REQUEST",
+                exception.getMessage()
+        );
+    }
+
     @ExceptionHandler({
             ScriptNotFoundException.class,
             ProductNotFoundException.class
