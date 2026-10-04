@@ -4,16 +4,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record SaveScriptRequest(
+public record ProductExecutionRequest(
 
-        @NotBlank(message = "name is required")
-        @Size(max = 80, message = "name must not exceed 80 characters")
-        String name,
+        @NotBlank(message = "productId is required")
+        @Size(max = 40, message = "productId must not exceed 40 characters")
+        String productId,
 
         @NotBlank(message = "language is required")
         @Pattern(
-                regexp = "python|javascript|java",
-                message = "language must be python, javascript, or java"
+                regexp = "python|javascript",
+                message = "language must be python or javascript"
         )
         String language,
 
