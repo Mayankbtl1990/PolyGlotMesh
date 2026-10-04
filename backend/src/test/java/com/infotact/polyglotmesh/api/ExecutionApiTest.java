@@ -104,7 +104,7 @@ class ExecutionApiTest {
                         "code", "x".repeat(20_001)
                 ))
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isEqualTo(422);
     }
 
     @Test
