@@ -50,6 +50,17 @@ public class ApiExceptionHandler {
         );
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(
+            IllegalArgumentException exception
+    ) {
+        return response(
+                HttpStatus.BAD_REQUEST,
+                "INVALID_REQUEST",
+                exception.getMessage()
+        );
+    }
+
     @ExceptionHandler({
             ScriptNotFoundException.class,
             ProductNotFoundException.class
@@ -100,7 +111,12 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiError> handleScriptExecution(
             ScriptExecutionException exception
     ) {
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+        // Agar error size ya validation se juda hai toh 400 do, warna 422
+        HttpStatus status = (exception.getMessage() != null && exception.getMessage().toLowerCase().contains("size"))
+                ? HttpStatus.BAD_REQUEST
+                : HttpStatus.UNPROCESSABLE_ENTITY;
+
+        return ResponseEntity.status(status)
                 .body(new ApiError(
                         exception.code(),
                         exception.getMessage(),

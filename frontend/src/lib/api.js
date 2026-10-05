@@ -53,6 +53,20 @@ async function request(path, options = {}) {
   return body;
 }
 
+export function getMockProducts() {
+  return request("/api/data/products");
+}
+
+export function executeWithProduct({ productId, language, code }) {
+  return request("/api/data/execute", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ productId, language, code }),
+  });
+}
+
 export function getHealth() {
   return request("/api/health");
 }

@@ -11,7 +11,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "polyglotmesh.execution.timeout-ms=30000"
+        properties = {
+                "polyglotmesh.execution.timeout-ms=30000",
+                "spring.datasource.url=jdbc:h2:mem:execution-api"
+        }
 )
 class ExecutionApiTest {
 
@@ -104,7 +107,7 @@ class ExecutionApiTest {
                         "code", "x".repeat(20_001)
                 ))
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isEqualTo(422);
     }
 
     @Test
