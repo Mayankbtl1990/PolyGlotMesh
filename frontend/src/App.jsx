@@ -21,12 +21,13 @@ export default function App() {
 
   const execution = useExecution();
 
+  const editorLocked = execution.running || libraryBusy || dataBusy;
   const selectedLanguage = LANGUAGES.find(
     (item) => item.id === language,
   );
 
   const canRun =
-    !execution.running &&
+    !editorLocked &&
     !libraryBusy &&
     selectedLanguage.executable &&
     Boolean(scripts[language].trim()) &&
@@ -37,6 +38,19 @@ export default function App() {
       ...current,
       [language]: code,
     }));
+  }
+
+  function insertBindingExample(example) {
+    if (
+      !window.confirm(
+        "Replace the current tab with the data-binding example?",
+      )
+    ) {
+      return;
+    }
+
+    updateCode(example);
+    execution.clear();
   }
 
   function loadSavedScript(script) {
@@ -94,7 +108,7 @@ export default function App() {
           <button
             type="button"
             className="secondary-button"
-            disabled={execution.running || libraryBusy}
+            disabled={editorLocked}
             onClick={execution.clear}
           >
             Clear console
@@ -120,7 +134,7 @@ export default function App() {
           code={scripts[language]}
           onLanguageChange={changeLanguage}
           onCodeChange={updateCode}
-          readOnly={execution.running || libraryBusy}
+          readOnly={editorLocked}
         />
 
         <ExecutionConsole execution={execution} />
@@ -129,9 +143,17 @@ export default function App() {
       <ScriptLibraryPanel
         language={language}
         code={scripts[language]}
-        disabled={execution.running}
+        disabled={execution.running || dataBusy}
         onLoad={loadSavedScript}
         onBusyChange={setLibraryBusy}
+      />
+
+      <DataBindingPanel
+        language={language}
+        code={scripts[language]}
+        disabled={execution.running || libraryBusy}
+        onBusyChange={setDataBusy}
+        onUseExample={insertBindingExample}
       />
       <MetricsDashboard /> 
       <PricingAuditPanel />
