@@ -9,6 +9,7 @@ import RuntimePolicyPanel from "./components/RuntimePolicyPanel";
 import MetricsDashboard from "./components/MetricsDashboard";
 import RuntimeDiagnosticsPanel from "./components/RuntimeDiagnosticsPanel";
 import ScriptLibraryPanel from "./components/ScriptLibraryPanel";
+import DataBindingPanel from "./components/DataBindingPanel";
 
 import { useExecution } from "./hooks/useExecution";
 import { useRunShortcut } from "./hooks/useRunShortcut"; 
@@ -18,7 +19,8 @@ export default function App() {
   const [language, setLanguage] = useState("python");
   const [scripts, setScripts] = useState(() => ({ ...INITIAL_SCRIPTS }));
   const [libraryBusy, setLibraryBusy] = useState(false);
-
+  const [dataBusy, setDataBusy] = useState(false);
+  
   const execution = useExecution();
 
   const editorLocked = execution.running || libraryBusy || dataBusy;

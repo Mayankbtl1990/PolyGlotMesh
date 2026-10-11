@@ -7,7 +7,7 @@ export default function MetricCards({ metrics }) {
     {
       title: "Guest executions",
       value: metrics.guestCount,
-      detail: "Accepted executions, including failures",
+      detail: "Main Run executions only; excludes data/audit panels",
     },
     {
       title: "Guest mean",

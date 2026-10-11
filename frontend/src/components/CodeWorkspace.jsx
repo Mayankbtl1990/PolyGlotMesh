@@ -32,7 +32,7 @@ export default function CodeWorkspace({
 
       {!selected.executable && (
         <p className="warning">
-          Java is reference-only. Run Python or JavaScript scripts.
+          Java is reference-only. You can save this tab, but execution is available only for Python and JavaScript.
         </p>
       )}
 
